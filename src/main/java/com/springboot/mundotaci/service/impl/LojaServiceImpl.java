@@ -2,39 +2,34 @@ package com.springboot.mundotaci.service.impl;
 
 import com.springboot.mundotaci.dto.LojaDTO;
 import com.springboot.mundotaci.entity.Loja;
-import com.springboot.mundotaci.entity.Lojista;
 import com.springboot.mundotaci.exception.ResourceNotFoundException;
 import com.springboot.mundotaci.repository.LojaRepository;
-import com.springboot.mundotaci.repository.LojistaRepository;
 import com.springboot.mundotaci.service.LojaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
 public class LojaServiceImpl implements LojaService {
 
     private LojaRepository lojaRepository;
-    private LojistaRepository lojistaRepository;
+
     private ModelMapper mapper;
 
     @Autowired
-    public LojaServiceImpl(LojaRepository lojaRepository, LojistaRepository lojistaRepository, ModelMapper mapper){
+    public LojaServiceImpl(LojaRepository lojaRepository, ModelMapper mapper){
         this.lojaRepository = lojaRepository;
-        this.lojistaRepository = lojistaRepository;
         this.mapper = mapper;
     }
 
     @Override
-    public LojaDTO AddLoja(long lojistaId, LojaDTO lojaDTO) {
+    public LojaDTO AddLoja(LojaDTO lojaDTO) {
 
         Loja loja = mapToEntity(lojaDTO);
-
-        Lojista lojista = lojistaRepository.findById(lojistaId).orElseThrow(() -> new ResourceNotFoundException("Lojista", "id", lojistaId));
-
-        loja.setLojista(lojista);
 
         Loja novaLoja  = lojaRepository.save(loja);
 
@@ -43,9 +38,26 @@ public class LojaServiceImpl implements LojaService {
         return retorno;
     }
 
+    @Override
+    public List<LojaDTO> GetLojas(){
+        List<Loja> lojaList = lojaRepository.findAll();
+        return mapToListDTO(lojaList);
+    }
+
 
     private LojaDTO mapToDTO(Loja entity){
         return mapper.map(entity, LojaDTO.class);
+    }
+
+    private List<LojaDTO> mapToListDTO(List<Loja> lojaList) {
+        List<LojaDTO> listaLojasDTO= new ArrayList<>();
+
+        for (Loja loja : lojaList
+             ) {
+            listaLojasDTO.add(mapper.map(loja, LojaDTO.class));
+        }
+
+        return listaLojasDTO;
     }
 
     private Loja mapToEntity(LojaDTO dto){

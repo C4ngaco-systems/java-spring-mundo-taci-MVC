@@ -23,7 +23,4 @@ public class Loja {
     @Column
     private String funcionario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lojista_id", nullable = false)
-    private Lojista lojista;
 }

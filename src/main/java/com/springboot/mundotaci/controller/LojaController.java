@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/")
 public class LojaController {
@@ -16,9 +18,13 @@ public class LojaController {
         this.lojaService = lojaService;
     }
 
-    @PostMapping("/lojistas/{lojistaId}/lojas")
-    public ResponseEntity<LojaDTO> AddLoja(@PathVariable(value = "lojistaId") long logistaId, @RequestBody LojaDTO lojaDto){
-        return new ResponseEntity<>(lojaService.AddLoja(logistaId, lojaDto), HttpStatus.CREATED);
+    @GetMapping("/lojas")
+    public ResponseEntity<List<LojaDTO>> GetLojas(){
+        return new ResponseEntity<>(lojaService.GetLojas(), HttpStatus.OK);
+    }
+    @PostMapping("/lojas")
+    public ResponseEntity<LojaDTO> AddLoja(@RequestBody LojaDTO lojaDto){
+        return new ResponseEntity<>(lojaService.AddLoja(lojaDto), HttpStatus.CREATED);
     }
 
 }
