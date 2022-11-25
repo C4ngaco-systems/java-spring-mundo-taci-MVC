@@ -44,7 +44,6 @@ public class LojaServiceImpl implements LojaService {
         return mapToListDTO(lojaList);
     }
 
-
     private LojaDTO mapToDTO(Loja entity){
         return mapper.map(entity, LojaDTO.class);
     }
